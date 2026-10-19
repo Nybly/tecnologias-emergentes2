@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Projeto Unity rodando no Quest com a cena do Sebrae Lab navegável, itens de inovação que podem ser pegos e o Mural do Conhecimento funcionando.
+**Goal:** Projeto Visita Guiada rodando no Quest com a cena do Sebrae Lab navegável, itens de inovação que podem ser pegos e o Mural do Conhecimento funcionando.
 
-**Architecture:** O projeto parte de uma cópia do "My project" (XR Interaction Toolkit 3.0.11 com Starter Assets e Device Simulator), convertida para a Unity 6000.3.14f1 e configurada para Quest via OpenXR. O código do grupo fica no assembly `SebraeLab` (`Assets/SebraeLab/Scripts`). Cada interação é um MonoBehaviour pequeno que escuta eventos do XR Toolkit e expõe `UnityEvent` para a camada de missões das semanas seguintes.
+**Architecture:** O projeto parte do "Visita Guiada", criado pelo Unity Hub com o template de VR na 6000.3.14f1 (XR Interaction Toolkit 3.5.1, Meta OpenXR e XR Hands já configurados). A cena do Sebrae Lab nasce de uma cópia da `BasicScene` do template. O código do grupo fica no assembly `SebraeLab` (`Assets/SebraeLab/Scripts`). Cada interação é um MonoBehaviour pequeno que escuta eventos do XR Toolkit e expõe `UnityEvent` para a camada de missões das semanas seguintes.
 
-**Tech Stack:** Unity 6000.3.14f1, URP, XR Interaction Toolkit 3.0.11, OpenXR com Meta Quest Support, TextMeshPro, Unity Test Framework (NUnit, EditMode).
+**Tech Stack:** Unity 6000.3.14f1, URP 17.3, XR Interaction Toolkit 3.5.1, OpenXR com Meta Quest Support, TextMeshPro, Unity Test Framework (NUnit, EditMode).
 
 Spec: `docs/superpowers/specs/2026-10-19-experiencia-vr-sebrae-lab-design.md`
 
@@ -14,10 +14,11 @@ Spec: `docs/superpowers/specs/2026-10-19-experiencia-vr-sebrae-lab-design.md`
 
 - Versão da Unity: **6000.3.14f1**. Não abrir o projeto em outra versão.
 - Alvo: Meta Quest 2 e 3, plataforma Android, OpenXR.
-- XR Interaction Toolkit fica em **3.0.11**.
-- Nada em `Assets/Sebraelab3D/` ou `Assets/Samples/` é editado. Alterações vão em cópias dentro de `Assets/SebraeLab/`. Exceção: configurações de importação dos FBX (Scale Factor, Generate Colliders), que só mudam o `.meta`.
+- XR Interaction Toolkit fica em **3.5.1**.
+- Nada em `Assets/Sebraelab3D/`, `Assets/Samples/` ou `Assets/VRTemplateAssets/` é editado. Alterações vão em cópias dentro de `Assets/SebraeLab/`. Exceção: configurações de importação dos FBX (Scale Factor, Generate Colliders), que só mudam o `.meta`.
 - Código do grupo no namespace `SebraeLab`, nomes em português.
-- Repositório: `Nybly/tecnologias-emergentes2`, clone local em `C:\Users\Gilberto Jr\Downloads\Claude\Projetos\tecnologias-emergentes` (fora do OneDrive).
+- Repositório: `Nybly/tecnologias-emergentes2`. O clone local é a própria pasta do projeto, `C:\Users\Gilberto Jr\Downloads\Claude\Projetos\tecnologias-emergentes\Visita Guiada` (fora do OneDrive). Os comandos `git` rodam dentro dela.
+- Estado de partida (19/10): commit `13ffbe6` na `main`, com o template de VR e a pasta `docs/`. A Task 1 e a conversão de versão já estão feitas.
 - Pull antes de abrir a Unity, commit ao fechar. Push só com autorização do Gilberto.
 - Mensagens de commit seguem `CLAUDE.md` do workspace: imperativo, sem travessão, sem assinatura de ferramenta.
 
@@ -33,7 +34,7 @@ Cada tarefa indica o executor:
 Com o editor da Unity **fechado** (o modo batch não abre um projeto que já está aberto):
 
 ```bash
-"/c/Program Files/Unity/Hub/Editor/6000.3.14f1/Editor/Unity.exe" -batchmode -projectPath "C:/Users/Gilberto Jr/Downloads/Claude/Projetos/te2" -runTests -testPlatform EditMode -testResults "C:/Users/Gilberto Jr/Downloads/Claude/Projetos/te-test-results.xml" -logFile -
+"/c/Program Files/Unity/Hub/Editor/6000.3.14f1/Editor/Unity.exe" -batchmode -projectPath "C:/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada" -runTests -testPlatform EditMode -testResults "C:/Users/Gilberto Jr/Downloads/Claude/Projetos/te-test-results.xml" -logFile -
 ```
 
 Sem `-quit`: o `-runTests` encerra sozinho. O resultado fica no XML, fora do repositório. Para ler o resumo:
@@ -61,174 +62,106 @@ grep -o '<test-run[^>]*>' "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te-tes
 
 ---
 
-### Task 1: Montar o projeto no repositório [Agente]
+### Task 1: Montar o projeto no repositório [Concluída]
 
-**Files:**
-- Create: `Assets/`, `Packages/`, `ProjectSettings/` (cópia do My project)
-
-**Interfaces:**
-- Consumes: projeto em `C:\Users\Gilberto Jr\OneDrive - aluno.undb.edu.br\Slides e outras coisas UNDB\5º Período\Tecnologias Emergentes\My project`
-- Produces: projeto Unity na raiz do repositório, ainda na versão 6000.0.83f1
-
-- [ ] **Step 1: Copiar as três pastas e o `.vsconfig`**
+O projeto Visita Guiada (template de VR do Unity Hub, 6000.3.14f1) já está na `main` do repositório, commit `13ffbe6`, junto com `docs/`. O `.gitignore` do Davi já exclui `Library`, `Temp`, `Logs`, `UserSettings` e arquivos gerados. Nada a fazer além da conferência, com a Unity fechada:
 
 ```bash
-SRC="/c/Users/Gilberto Jr/OneDrive - aluno.undb.edu.br/Slides e outras coisas UNDB/5º Período/Tecnologias Emergentes/My project"
-DST="/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
-cp -r "$SRC/Assets" "$SRC/Packages" "$SRC/ProjectSettings" "$SRC/.vsconfig" "$DST/"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
+git status -sb | head -1
+head -1 ProjectSettings/ProjectVersion.txt
 ```
 
-- [ ] **Step 2: Conferir que nada gerado entrou no stage**
-
-```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
-git add -A && git status --short | wc -l
-git diff --cached --name-only | grep -E '^(Library|Temp|Logs|UserSettings|obj)/' | wc -l
-git diff --cached --name-only | grep -E '\.(csproj|sln)$' | wc -l
-```
-
-Expected: cerca de 500 arquivos no stage, e `0` nas duas últimas contagens.
-
-- [ ] **Step 3: Varrer segredos**
-
-```bash
-git grep --cached -IlEi '(api[_-]?key|ghp_|gho_|sk-[a-z0-9]{20}|AKIA[0-9A-Z]{16}|BEGIN (RSA|PRIVATE))' -- . ':!*.meta'
-```
-
-Expected: nenhuma saída. Se algo aparecer, ler o arquivo antes de seguir.
-
-- [ ] **Step 4: Commit**
-
-```bash
-git commit -m "Adiciona projeto Unity base com XR Interaction Toolkit" -m "Copiado do My project (Unity 6.0) com SampleScene, DemoScene, Starter Assets e XR Device Simulator. A conversão para a 6000.3.14f1 vem no próximo commit."
-```
+Expected: `## main...origin/main` e `m_EditorVersion: 6000.3.14f1`.
 
 ---
 
-### Task 2: Converter para a Unity 6000.3.14f1 [Gilberto]
+### Task 2: Abrir na 6000.3.14f1 e importar o XR Device Simulator [Gilberto]
 
 **Files:**
-- Modify: `ProjectSettings/ProjectVersion.txt`, `Packages/manifest.json`, `Packages/packages-lock.json` e arquivos `.meta` gerados pela Unity
+- Create: `Assets/Samples/XR Interaction Toolkit/3.5.1/XR Device Simulator/` (pelo Package Manager)
 
 **Interfaces:**
 - Consumes: Task 1
-- Produces: projeto abrindo sem erros na 6000.3.14f1
+- Produces: projeto abrindo sem erros e prefab `XR Device Simulator.prefab` disponível
 
-- [ ] **Step 1: Adicionar o projeto no Unity Hub**
+- [ ] **Step 1: Abrir o projeto**
 
-Hub › **Projects** › **Add** › **Add project from disk** › escolher a pasta `te2`. Na coluna **Editor Version**, selecionar **6000.3.14f1**.
+Unity Hub › **Projects** › abrir `Visita Guiada` (editor 6000.3.14f1). Se o projeto não estiver na lista: **Add › Add project from disk** e escolher a pasta `Visita Guiada`.
 
-*Por quê:* o Hub registra o projeto e qual editor abre. A pasta veio da 6.0, então o Hub vai perguntar se pode converter.
+*Por quê:* a pasta já foi aberta uma vez pelo Hub, então a `Library` existe e a abertura é rápida.
 
-- [ ] **Step 2: Abrir e aceitar a conversão**
+- [ ] **Step 2: Conferir o Console**
 
-Clicar no projeto. Na janela "Change Editor version?", confirmar **Change Version**. Se aparecer aviso de atualização de pacotes (API Updater), aceitar.
+**Window › General › Console**. Esperado: nenhum erro **vermelho**. Avisos amarelos do template podem ser ignorados.
 
-*Por quê:* a 6.3 reescreve alguns arquivos de configuração no formato novo. É uma via de mão única, por isso o projeto não deve mais ser aberto na 6.0. A primeira abertura demora, porque a pasta `Library` é criada do zero.
+- [ ] **Step 3: Importar o XR Device Simulator**
 
-- [ ] **Step 3: Conferir o Console**
+**Window › Package Manager** › **In Project** › **XR Interaction Toolkit** › aba **Samples** › **XR Device Simulator** › **Import**.
 
-Menu **Window › General › Console**. Esperado: nenhum erro vermelho. Avisos amarelos dos exemplos podem ser ignorados. Se houver erro vermelho, copiar o texto e passar ao agente antes de continuar.
+*Por quê:* o simulador vem como "sample" do pacote e só entra no projeto quando é importado. Ele faz teclado e mouse fingirem ser o óculos e os controles, o que permite testar no notebook sem o Quest. Existe também o **XR Interaction Simulator** (mais novo). Usamos o Device Simulator, como combinado.
 
 - [ ] **Step 4: Testar o rig no simulador**
 
-Abrir `Assets/Scenes/SampleScene`. Se a cena não tiver o rig, arrastar para a Hierarchy:
-- `Assets/Samples/XR Interaction Toolkit/3.0.11/Starter Assets/Prefabs/XR Origin (XR Rig).prefab`
-- `Assets/Samples/XR Interaction Toolkit/3.0.11/XR Device Simulator/XR Device Simulator.prefab`
+Abrir `Assets/Scenes/BasicScene`. Arrastar para a Hierarchy `Assets/Samples/XR Interaction Toolkit/3.5.1/XR Device Simulator/XR Device Simulator.prefab`. **Play**. Esperado: câmera na altura de uma pessoa e painel do simulador no canto, com os atalhos de teclado. Testar andar e girar. Sair do Play **sem salvar** a cena.
 
-Apertar **Play**. Esperado: a câmera fica na altura de uma pessoa e o painel do simulador aparece no canto da tela com os atalhos de teclado. Testar andar e girar. Sair do Play **sem salvar** a cena.
-
-*Por quê:* confirma que XR Toolkit e simulador sobreviveram à conversão antes de empilhar mais coisas.
-
-- [ ] **Step 5: Fechar a Unity e verificar a versão [Agente]**
+- [ ] **Step 5: Fechar a Unity e commit [Agente]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
-head -1 ProjectSettings/ProjectVersion.txt
-git status --short | grep -E '^(\?\?| M) (Library|Temp|Logs|UserSettings)/' | wc -l
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
+git status --short | grep -cE '^(\?\?| M) (Library|Temp|Logs|UserSettings)/'
+git add -A
+git commit -m "Importa o XR Device Simulator"
 ```
 
-Expected: `m_EditorVersion: 6000.3.14f1` e `0`.
+Expected: `0` na contagem e um commit com os arquivos do simulador.
+
+---
+
+### Task 3: Conferir a configuração de Quest [Gilberto]
+
+O template de VR já traz OpenXR, o grupo Meta Quest, os perfis de controle e IL2CPP com ARM64. Esta tarefa só confere e ajusta o que pode impedir a instalação no Quest 2.
+
+**Files:**
+- Modify: `ProjectSettings/ProjectSettings.asset`
+
+**Interfaces:**
+- Consumes: Task 2
+- Produces: projeto na plataforma Android, pronto para build
+
+- [ ] **Step 1: Plataforma Android**
+
+**File › Build Profiles** › **Android** › **Switch Platform** (se já estiver ativa, aparece como Active). Demora alguns minutos na primeira troca, porque as texturas são reimportadas no formato do óculos.
+
+- [ ] **Step 2: Conferir OpenXR e Meta Quest**
+
+**Edit › Project Settings › XR Plug-in Management**, aba do Android: **OpenXR** marcado. Em **OpenXR** (aba Android): **Meta Quest Feature** marcado e, em **Enabled Interaction Profiles**, **Oculus Touch Controller Profile** e **Meta Quest Touch Plus Controller Profile**. Esperado: tudo já marcado pelo template.
+
+- [ ] **Step 3: Baixar o Android mínimo**
+
+**Project Settings › Player › Android › Other Settings**: **Minimum API Level** = **Android 12L (API level 32)**. Manter **Target API Level** em 34.
+
+*Por quê:* o template põe o mínimo em 34, que pode impedir a instalação em um Quest 2, cujo sistema é mais antigo. Mínimo 32 cobre Quest 2 e 3.
+
+- [ ] **Step 4: Project Validation**
+
+**XR Plug-in Management › Project Validation**, aba Android › **Fix All** até não haver itens vermelhos.
+
+- [ ] **Step 5: Fechar a Unity e verificar [Agente]**
+
+```bash
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
+grep -E 'AndroidMinSdkVersion|AndroidTargetSdkVersion|AndroidTargetArchitectures' ProjectSettings/ProjectSettings.asset
+grep -A2 'scriptingBackend:' ProjectSettings/ProjectSettings.asset | head -3
+```
+
+Expected: `AndroidMinSdkVersion: 32`, `AndroidTargetSdkVersion: 34`, `AndroidTargetArchitectures: 2` e `Android: 1` (IL2CPP).
 
 - [ ] **Step 6: Commit [Agente]**
 
 ```bash
 git add -A
-git commit -m "Converte o projeto para a Unity 6000.3.14f1"
-```
-
----
-
-### Task 3: Configurar OpenXR para o Meta Quest [Gilberto]
-
-**Files:**
-- Modify: `Packages/manifest.json`, `ProjectSettings/ProjectSettings.asset`, `ProjectSettings/EditorBuildSettings.asset`
-- Create: `Assets/XR/` (configurações de XR Plugin Management e OpenXR)
-
-**Interfaces:**
-- Consumes: Task 2
-- Produces: projeto na plataforma Android com OpenXR e Meta Quest Support ativos
-
-- [ ] **Step 1: Trocar a plataforma para Android**
-
-**File › Build Profiles** › **Android** › **Switch Platform**.
-
-*Por quê:* o Quest roda Android. Trocar agora faz a Unity reimportar texturas no formato do óculos uma vez só. Demora alguns minutos.
-
-- [ ] **Step 2: Instalar o XR Plugin Management**
-
-**Edit › Project Settings › XR Plug-in Management** › **Install XR Plugin Management**.
-
-*Por quê:* é o gerenciador que liga o "motor" de VR. Sem ele, o XR Toolkit não recebe dados de cabeça e controles.
-
-- [ ] **Step 3: Ativar OpenXR com Meta Quest**
-
-Ainda em **XR Plug-in Management**, aba com o ícone do Android: marcar **OpenXR** e, logo abaixo, o grupo **Meta Quest feature group**. Aceitar a instalação do pacote OpenXR se a Unity pedir.
-
-Depois, aba **Windows** (ícone de monitor): marcar **OpenXR** também.
-
-*Por quê:* OpenXR é o padrão aberto que o Quest entende. O grupo Meta Quest ativa os recursos específicos do óculos. Ativar no Windows permite que o simulador e um eventual óculos ligado ao PC usem a mesma configuração.
-
-- [ ] **Step 4: Perfis de controle**
-
-**XR Plug-in Management › OpenXR**, aba Android. Em **Enabled Interaction Profiles**, clicar em **+** e adicionar:
-- **Oculus Touch Controller Profile** (Quest 2)
-- **Meta Quest Touch Plus Controller Profile** (Quest 3)
-
-Repetir na aba Windows.
-
-*Por quê:* sem perfil de controle o OpenXR não sabe mapear os botões, e os controles ficam mortos no óculos.
-
-- [ ] **Step 5: Resolver o Project Validation**
-
-**XR Plug-in Management › Project Validation**, aba Android › **Fix All**. Repetir até a lista ficar sem erros vermelhos.
-
-Conferir em **Project Settings › Player › Android › Other Settings**:
-- **Scripting Backend**: IL2CPP
-- **Target Architectures**: só ARM64
-- **Minimum API Level**: Android 12L (API level 32)
-
-*Por quê:* o Quest exige ARM64 e IL2CPP. O validador da Unity conhece essas regras e corrige quase tudo sozinho.
-
-- [ ] **Step 6: Testar no simulador de novo**
-
-Abrir a `SampleScene` e dar **Play**. Esperado: o mesmo comportamento da Task 2, sem erros novos no Console.
-
-- [ ] **Step 7: Fechar a Unity e verificar os pacotes [Agente]**
-
-```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
-grep -E '"com.unity.xr.(management|openxr)"' Packages/manifest.json
-grep -E 'AndroidTargetArchitectures|scriptingBackend' -A2 ProjectSettings/ProjectSettings.asset | head -8
-```
-
-Expected: as duas linhas de pacote presentes; `AndroidTargetArchitectures: 2` (ARM64) e `Android: 1` em `scriptingBackend` (IL2CPP).
-
-- [ ] **Step 8: Commit [Agente]**
-
-```bash
-git add -A
-git commit -m "Configura OpenXR e Meta Quest para Android"
+git commit -m "Baixa o Android mínimo para o Quest 2"
 ```
 
 ---
@@ -255,7 +188,7 @@ Abrir `Assets/Sebraelab3D`, clicar em `Sebrae Lab.fbx` e olhar a pré-visualiza�
 - [ ] **Step 3: Fechar a Unity e verificar [Agente]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 ls Assets/Sebraelab3D/*.fbx | wc -l
 git status --short Assets/Sebraelab3D | head -3
 ```
@@ -282,20 +215,34 @@ git commit -m "Importa os modelos 3D do Sebrae Lab"
 ### Task 5: Estrutura de pastas, assemblies e testes [Agente]
 
 **Files:**
+- Modify: `Packages/manifest.json` (adicionar `com.unity.test-framework`)
 - Create: `Assets/SebraeLab/{Scenes,Prefabs,Scripts/Interacoes,Dialogos,Materiais,Modelos,Audio,Tests/EditMode}/`
 - Create: `Assets/SebraeLab/Scripts/SebraeLab.asmdef`
 - Create: `Assets/SebraeLab/Tests/EditMode/SebraeLab.Tests.EditMode.asmdef`
 - Create: `Assets/SebraeLab/Tests/EditMode/SanidadeTests.cs`
 
 **Interfaces:**
-- Consumes: Task 3 (pacotes XR presentes)
+- Consumes: Task 3 (projeto configurado)
 - Produces: assembly `SebraeLab` (referencia `Unity.XR.Interaction.Toolkit`, `Unity.TextMeshPro`) e assembly de testes `SebraeLab.Tests.EditMode`
+
+- [ ] **Step 0: Adicionar o pacote de testes**
+
+O template de VR não traz o Unity Test Framework. Sem ele o assembly de testes não compila.
+
+```bash
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
+grep -c '"com.unity.test-framework"' Packages/manifest.json
+sed -i 's#"dependencies": {#"dependencies": {\n    "com.unity.test-framework": "1.6.0",#' Packages/manifest.json
+grep -n 'test-framework' Packages/manifest.json
+```
+
+Expected: `0` antes do `sed` e uma linha com `"com.unity.test-framework": "1.6.0",` depois. A Unity baixa o pacote na próxima execução (precisa de internet).
 
 - [ ] **Step 1: Criar as pastas**
 
 ```bash
-mkdir -p "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2/Assets/SebraeLab"
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2/Assets/SebraeLab"
+mkdir -p "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada/Assets/SebraeLab"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada/Assets/SebraeLab"
 mkdir -p Scenes Prefabs Scripts/Interacoes Dialogos Materiais Modelos Audio Tests/EditMode
 for d in Scenes Prefabs Dialogos Materiais Modelos Audio; do touch "$d/.gitkeep"; done
 ```
@@ -389,7 +336,7 @@ Se falhar com erro de compilação citando assembly não encontrado, conferir os
 A Unity em modo batch gera os `.meta` dos arquivos novos. Eles entram no commit:
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git add -A && git status --short | grep -c '\.meta$'
 git commit -m "Cria estrutura de pastas e assemblies do projeto"
 ```
@@ -405,13 +352,17 @@ git commit -m "Cria estrutura de pastas e assemblies do projeto"
 - Consumes: Tasks 3 e 4
 - Produces: cena `SebraeLab` com o prédio, o jogador e locomoção. Hierarquia com os vazios `_Ambiente`, `_XR`, `_UI`, `_Audio`, `Interacoes`, `Missoes`.
 
-- [ ] **Step 1: Criar a cena**
+- [ ] **Step 1: Criar a cena a partir da BasicScene**
 
-**File › New Scene** › **Basic (URP)** › **Create**. **File › Save As** › `Assets/SebraeLab/Scenes/SebraeLab.unity`. Apagar a `Main Camera` que veio na cena (o XR Origin traz a própria câmera).
+Abrir `Assets/Scenes/BasicScene`. **File › Save As** › `Assets/SebraeLab/Scenes/SebraeLab.unity`.
+
+*Por quê:* a `BasicScene` do template já traz o jogador (`XR Origin (XR Rig)`), o `XR Interaction Manager`, o `EventSystem` com o `XR UI Input Module` (necessário para clicar em botões com o raio do controle) e um piso com `Teleportation Area`. Partir dela evita montar tudo e já funciona no óculos. A cena original continua intacta.
 
 - [ ] **Step 2: Organizar a hierarquia**
 
-Botão direito na Hierarchy › **Create Empty**, seis vezes, com os nomes: `_Ambiente`, `_XR`, `_UI`, `_Audio`, `Interacoes`, `Missoes`. Zerar o Transform de todos. Dentro de `Interacoes`, criar os vazios `ItensDeInovacao`, `MuralDoConhecimento`, `NPC_Gerente`, `Boliche`, `ArcoEFlecha`. Mover a `Directional Light` para dentro de `_Ambiente`.
+Botão direito na Hierarchy › **Create Empty**, seis vezes, com os nomes: `_Ambiente`, `_XR`, `_UI`, `_Audio`, `Interacoes`, `Missoes`. Zerar o Transform de todos. Dentro de `Interacoes`, criar os vazios `ItensDeInovacao`, `MuralDoConhecimento`, `NPC_Gerente`, `Boliche`, `ArcoEFlecha`.
+
+Mover para `_Ambiente` a `Directional Light` e o `Plane`. Mover para `_XR` o `XR Origin (XR Rig)`, o `XR Interaction Manager`, o `EventSystem` e o `XR Device Simulator` (se o simulador não estiver na cena, arrastar o prefab importado na Task 2).
 
 *Por quê:* vazios funcionam como pastas na cena. Em semanas, com dezenas de objetos, isso evita procurar coisas.
 
@@ -431,25 +382,13 @@ Selecionar `Sebrae Lab` na Hierarchy. No Inspector do `.fbx` (aba Model), marcar
 
 *Por quê:* sem collider, o jogador atravessa paredes e cai pelo chão. Gerar colliders na importação cria um Mesh Collider em cada peça do modelo.
 
-- [ ] **Step 5: Colocar o jogador**
+- [ ] **Step 5: Posicionar o jogador**
 
-Arrastar para dentro de `_XR`:
-- `Assets/Samples/XR Interaction Toolkit/3.0.11/Starter Assets/Prefabs/XR Origin (XR Rig).prefab`
-- `Assets/Samples/XR Interaction Toolkit/3.0.11/XR Device Simulator/XR Device Simulator.prefab`
-
-Posicionar o `XR Origin (XR Rig)` sobre o chão da recepção, com Y no nível do piso.
-
-Se não houver `XR Interaction Manager` na cena: **GameObject › XR › Interaction Manager**, dentro de `_XR`.
-
-Se não houver `EventSystem`: **GameObject › UI › Event System**. No Inspector, remover o `Standalone Input Module` (ou `Input System UI Input Module`) e adicionar **XR UI Input Module**. Mover para `_XR`.
-
-*Por quê:* o XR Origin é o jogador (cabeça e mãos). O simulador finge ser o óculos no PC. O EventSystem com XR UI Input Module é o que permite apontar o raio do controle e clicar em botões, necessário para o mural da Task 9.
+Mover o `XR Origin (XR Rig)` para sobre o chão da recepção, com Y no nível do piso. O `XR Interaction Manager`, o `EventSystem` e o simulador já estão na cena (Step 2). Conferir que o `EventSystem` tem **XR UI Input Module** e nenhum outro módulo de entrada ao lado.
 
 - [ ] **Step 6: Locomoção**
 
-O XR Origin dos Starter Assets já traz movimento contínuo (analógico) e teleporte. O movimento contínuo funciona com os colliders do Step 4. Para o teleporte, adicionar ao objeto do piso o componente **Teleportation Area**.
-
-Se o piso for parte de uma malha única com as paredes, criar **3D Object › Plane** do tamanho do piso, posicionado 1 cm acima, desmarcar **Mesh Renderer** e adicionar **Teleportation Area** nele.
+O XR Origin dos Starter Assets já traz movimento contínuo (analógico) e teleporte. O movimento contínuo funciona com os colliders do Step 4. Para o teleporte, usar o `Plane` que veio da `BasicScene` (já tem **Teleportation Area**): ajustar posição e escala para cobrir o piso do Sebrae Lab, 1 cm acima dele, e desmarcar o **Mesh Renderer** para ficar invisível. Se o piso tiver vários ambientes, duplicar o `Plane` para cada um.
 
 *Por quê:* teleporte é a forma de locomoção que menos causa enjoo em quem não está acostumado com VR. Na apresentação, muita gente vai experimentar.
 
@@ -460,7 +399,7 @@ Se o piso for parte de uma malha única com as paredes, criar **3D Object › Pl
 - [ ] **Step 8: Salvar e commit [Agente, com a Unity fechada]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 rm -f Assets/SebraeLab/Scenes/.gitkeep
 git add -A
 git commit -m "Monta a cena do Sebrae Lab com jogador e locomoção"
@@ -510,7 +449,7 @@ Se a tela ficar preta ou o app fechar, enviar ao agente o log: **Window › Anal
 - [ ] **Step 6: Apagar o APK e commit [Agente]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git add -A
 git diff --cached --name-only | grep -c '^Builds/'
 git commit -m "Inclui a cena SebraeLab no build Android"
@@ -734,7 +673,7 @@ Expected: `result="Passed"`, `total="6"` (5 novos e o de sanidade), `failed="0"`
 - [ ] **Step 5: Commit [Agente]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git add -A
 git commit -m "Adiciona interação de pegar itens de inovação"
 ```
@@ -768,7 +707,7 @@ Espalhar os três em mesas diferentes.
 - [ ] **Step 9: Commit [Agente, com a Unity fechada]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 rm -f Assets/SebraeLab/Prefabs/.gitkeep
 git add -A
 git commit -m "Coloca três itens de inovação nas mesas do Sebrae Lab"
@@ -1012,7 +951,7 @@ Expected: `result="Passed"`, `total="12"`, `failed="0"`.
 - [ ] **Step 5: Commit [Agente]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git add -A
 git commit -m "Adiciona painel informativo do Mural do Conhecimento"
 ```
@@ -1042,7 +981,7 @@ Dentro de `Interacoes/MuralDoConhecimento`:
 Arrastar `MuralDoConhecimento` para `Assets/SebraeLab/Prefabs/`. Salvar a cena e fechar a Unity.
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git add -A
 git commit -m "Coloca o Mural do Conhecimento na cena"
 ```
@@ -1079,7 +1018,7 @@ Anotar o que falhar e passar ao agente.
 - [ ] **Step 4: Push [Agente, com autorização do Gilberto]**
 
 ```bash
-cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/te2"
+cd "/c/Users/Gilberto Jr/Downloads/Claude/Projetos/tecnologias-emergentes/Visita Guiada"
 git log --oneline origin/main..HEAD
 git push origin main
 ```

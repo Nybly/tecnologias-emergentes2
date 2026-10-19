@@ -30,13 +30,13 @@ As missões (porta, café, arrumação do coworking) dão a narrativa, mas não 
 
 **Criação do projeto.**
 
-1. Copiar `Assets`, `Packages` e `ProjectSettings` do projeto "My project" (Unity 6000.0.83f1). Isso traz SampleScene, DemoScene, XR Interaction Toolkit 3.0.11 com Starter Assets e XR Device Simulator.
-2. Abrir na 6000.3.14f1. A Unity converte o projeto de 6.0 para 6.3.
-3. Adicionar XR Plugin Management, OpenXR e o perfil Meta Quest para a plataforma Android.
+1. Projeto "Visita Guiada" criado no Unity Hub com o template de VR na 6000.3.14f1. Traz XR Interaction Toolkit 3.5.1 com Starter Assets e Hands Interaction Demo, XR Hands, Meta OpenXR com os perfis de controle do Quest, `BasicScene` e `SampleScene`. Já está na `main` do repositório.
+2. Importar o XR Device Simulator pelo Package Manager (sample do XR Interaction Toolkit).
+3. Conferir a configuração de Quest e baixar o Android mínimo para a API 32, para cobrir o Quest 2.
 4. Importar `SebraeLabUnityAssets.unitypackage`.
-5. Primeiro commit.
+5. Criar a cena `SebraeLab` a partir de uma cópia da `BasicScene`.
 
-**Mantido como está.** URP (pipeline indicada para o Quest), XR Interaction Toolkit 3.0.11 e o `.gitignore` padrão da Unity que já está no repositório. Sem Git LFS: os modelos somam cerca de 10 MB.
+**Mantido como está.** URP (pipeline indicada para o Quest), XR Interaction Toolkit 3.5.1 e o `.gitignore` padrão da Unity que já está no repositório. Sem Git LFS: os modelos somam cerca de 10 MB.
 
 **Fluxo de trabalho.** Pull antes de abrir a Unity, commit e push ao fechar, aviso no grupo ao começar e ao terminar.
 
@@ -49,8 +49,8 @@ As missões (porta, café, arrumação do coworking) dão a narrativa, mas não 
 | Cena | Uso |
 |---|---|
 | `SebraeLab.unity` | Cena principal, com a experiência inteira |
-| `SampleScene.unity` | Teste rápido do rig, sem alteração |
-| `DemoScene.unity` | Referência de como o XR Interaction Toolkit resolve cada interação |
+| `SampleScene.unity` | Cena de tutorial do template, sem alteração |
+| `BasicScene.unity` | Cena mínima do template (jogador, EventSystem e teleporte), base da `SebraeLab`. Os exemplos do Toolkit ficam em `Assets/Samples/` como referência |
 
 **Hierarquia da `SebraeLab`.**
 
